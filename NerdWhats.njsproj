@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>NerdWhats</Name>
+    <RootNamespace>NerdWhats</RootNamespace>
+    <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>0b883b8c-3b19-45b9-b9e0-47c7eddcd8c0</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>start.ts</StartupFile>
+    <StartWebBrowser>True</StartWebBrowser>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <NodejsPort>3000</NodejsPort>
+    <EnableTypeScript>true</EnableTypeScript>
+    <StartWebBrowser>False</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="server_old.ts" />
+    <Content Include=".env" />
+    <Content Include="auth.ts" />
+    <Content Include="data.json">
+      <SubType>Code</SubType>
+    </Content>
+    <None Include="FolderProfile.pubxml" />
+    <Content Include="tsconfig.json" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="api\cliente\" />
+    <Folder Include="api\whats\" />
+    <Folder Include="common\" />
+    <Folder Include="core\" />
+    <Folder Include="model\" />
+    <Folder Include="api\" />
+    <Folder Include="helper\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="api\cliente\cliente-controller.ts" />
+    <TypeScriptCompile Include="api\cliente\cliente-resolver.ts" />
+    <TypeScriptCompile Include="api\cliente\cliente-routes.ts" />
+    <TypeScriptCompile Include="api\cliente\cliente-validate.ts" />
+    <TypeScriptCompile Include="api\whats\whtas-controller.ts" />
+    <TypeScriptCompile Include="api\whats\whats-routes.ts" />
+    <TypeScriptCompile Include="common\base-repository.ts" />
+    <TypeScriptCompile Include="common\base-resolver.ts" />
+    <TypeScriptCompile Include="common\base-service.ts" />
+    <TypeScriptCompile Include="common\crud-controller.ts" />
+    <TypeScriptCompile Include="core\WhatsCliente.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="core\WhatsController.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="helper\logger.ts" />
+    <TypeScriptCompile Include="helper\response.ts" />
+    <TypeScriptCompile Include="helper\route.ts" />
+    <TypeScriptCompile Include="model\enum-status.ts" />
+    <TypeScriptCompile Include="model\cliente-status.ts" />
+    <TypeScriptCompile Include="venom.ts" />
+    <TypeScriptCompile Include="plugins.ts" />
+    <TypeScriptCompile Include="router.ts" />
+    <TypeScriptCompile Include="start.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="model\cliente-model.ts" />
+    <TypeScriptCompile Include="config.ts" />
+    <TypeScriptCompile Include="server.ts" />
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
