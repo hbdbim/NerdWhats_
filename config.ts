@@ -1,6 +1,7 @@
 export default {
     swagger: {
         options: {
+            cors: true,
             securityDefinitions: {
                 'basic': {
                     'type': 'basic',

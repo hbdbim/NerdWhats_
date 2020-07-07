@@ -32,10 +32,11 @@ export class WhatsCliente {
                 devtools: false, // Open devtools by default
                 useChrome: false, // If false will use Chromium instance
                 debug: false, // Opens a debug session
-                logQR: false, // Logs QR automatically in terminal
+                logQR: true, // Logs QR automatically in terminal
                 browserArgs: [''], // Parameters to be added into the chrome browser instance
                 refreshQR: 15000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
-                disableSpins: true
+                disableSpins: true,
+                autoClose: 600000
             })
             .then((cli) => { this.start(cli); });
 
@@ -62,9 +63,7 @@ export class WhatsCliente {
 
         client.onMessage((message) => { this.onMessage(message) });
 
-        client.onAck((ack) => { this.onAck(ack) });
-
-        //client.onAnyMessage((message) => { this.onMessage(message); });
+        //client.onAck((ack) => { this.onAck(ack) });
 
         client.onStateChange((state) => {
             console.log(state);
@@ -90,8 +89,9 @@ export class WhatsCliente {
     }
 
     onMessage(message: Message) {
-        this.downloadFiles([message]);
-        this.callHook(message);
+        this.downloadFiles([message]).then(() => {
+            this.callHook(message);
+        });
     }
 
     getAllNewMessages = async (): Promise<any> => {
@@ -109,8 +109,9 @@ export class WhatsCliente {
     downloadFiles = async (_messages: Message[]): Promise<any> => {
         for (var i = 0; i < _messages.length; i++) {
             var message = _messages[i];
-            if (message.isMedia) {
-                message.mediaData['mediaBlob'] = await (await this.cliente.downloadFile(message)).toString('base64');
+            if (message.isMedia || message.isMMS) {
+                var buffer = await this.cliente.downloadFile(message);
+                message.mediaData['mediaBlob'] = await buffer.toString('base64');
             }
         }
     }

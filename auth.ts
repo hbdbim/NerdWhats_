@@ -9,47 +9,53 @@ export default class Auth {
         // register the @hapi/basic plugin on our own otherwise
         // the unit tests will fail because the module name '@hapi/basic'
         // doesn't match the plugin name 'basic'.
-        Auth.register(server, [{ plugin: BasicAuth, options: { once: true } }]).then(() => {
-            server.auth.strategy('simple', 'basic', {
-                validate: async function (request, sessionId, key, h) {
-                    Logger.debug('validacao de login: ' + JSON.stringify(request.headers.authorization));
+        return Auth.register(server, [{ plugin: BasicAuth, options: { once: true } }]).then(() => {
+            try {
+                server.auth.strategy('simple', 'basic', {
+                    validate: async function (request, sessionId, key, h) {
+                        Logger.debug('validacao de login: ' + JSON.stringify(request.headers.authorization));
 
-                    if (process.env.SENHA == request.headers.authorization) {
+                        if (process.env.SENHA == request.headers.authorization) {
+                            const credentials = {
+                                scope: 'admin'
+                            };
+                            return { credentials, isValid: true };
+                        }
+
+                        var resolver = new ClienteResolver();
+                        var cliente = await resolver.getByToken(request.headers.authorization);
+
+                        if (!cliente)
+                            return { isValid: false };
+
                         const credentials = {
-                            scope: 'admin'
+                            scope: 'cliente',
+                            user: cliente
                         };
+
                         return { credentials, isValid: true };
+
                     }
+                });
 
-                    var resolver = new ClienteResolver();
-                    var cliente = await resolver.getByToken(request.headers.authorization);
+                server.auth.strategy('admin', 'basic', {
+                    validate: async function (request, sessionId, key, h) {
+                        Logger.debug('validacao de login: ' + JSON.stringify(request.headers.authorization));
 
-                    if (!cliente)
+                        if (process.env.SENHA == request.headers.authorization) {
+                            return { isValid: true };
+                        }
+
                         return { isValid: false };
-
-                    const credentials = {
-                        scope: 'cliente',
-                        user: cliente
-                    };
-
-                    return { credentials, isValid: true };
-
-                }
-            });
-
-            server.auth.strategy('admin', 'basic', {
-                validate: async function (request, sessionId, key, h) {
-                    Logger.debug('validacao de login: ' + JSON.stringify(request.headers.authorization));
-
-                    if (process.env.SENHA == request.headers.authorization) {
-                        return { isValid: true };
                     }
+                });
 
-                    return { isValid: false };
-                }
-            });
-
-            server.auth.default('simple');
+                server.auth.default('simple');
+            } catch (error) {
+                Logger.info(
+                    `Plugins - Ups, something went wrong when registering swagger-ui plugin: ${error}`
+                );
+            }
         });
 
     };

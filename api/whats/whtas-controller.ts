@@ -7,6 +7,7 @@ import Venom from '../../venom';
 import { ClienteState } from '../../model/enum-status';
 import { WhatsCliente } from '../../core/WhatsCliente';
 import * as FileType from 'file-type';
+import { ClienteStatus } from '../../model/cliente-status';
 
 export default class WhatsController {
 
@@ -85,6 +86,9 @@ export default class WhatsController {
                     })
                 );
 
+            if (cliente.model.status.status == null)
+                cliente.create();
+
             return toolkit.response(
                 newResponse(request, {
                     value: cliente.model.status,
@@ -107,6 +111,7 @@ export default class WhatsController {
             Logger.info(`GET - ${request.url.href}`);
 
             let cliente = request.pre.client as WhatsCliente;
+
             cliente.create();
 
             return toolkit.response(
@@ -153,6 +158,8 @@ export default class WhatsController {
 
             let cliente = request.pre.client as WhatsCliente;
             cliente.close();
+            cliente.model = request.pre.session as ClienteModel;
+            cliente.model.status = new ClienteStatus();
             cliente.create();
 
             return toolkit.response(
@@ -186,11 +193,7 @@ export default class WhatsController {
                 })
             );
         } catch (error) {
-            return toolkit.response(
-                newResponse(request, {
-                    boom: Boom.badImplementation(error),
-                })
-            );
+            return this.catch(error, request, toolkit);
         }
     };
 
@@ -211,11 +214,7 @@ export default class WhatsController {
                 })
             );
         } catch (error) {
-            return toolkit.response(
-                newResponse(request, {
-                    boom: Boom.badImplementation(error),
-                })
-            );
+            return this.catch(error, request, toolkit);
         }
     };
 
@@ -237,11 +236,7 @@ export default class WhatsController {
                 })
             );
         } catch (error) {
-            return toolkit.response(
-                newResponse(request, {
-                    boom: Boom.badImplementation(error),
-                })
-            );
+            return this.catch(error, request, toolkit);
         }
     };
 
@@ -263,11 +258,7 @@ export default class WhatsController {
                 })
             );
         } catch (error) {
-            return toolkit.response(
-                newResponse(request, {
-                    boom: Boom.badImplementation(error),
-                })
-            );
+            return this.catch(error, request, toolkit);
         }
     };
 
@@ -293,11 +284,25 @@ export default class WhatsController {
                 })
             );
         } catch (error) {
-            return toolkit.response(
-                newResponse(request, {
-                    boom: Boom.badImplementation(error),
-                })
-            );
+            return this.catch(error, request, toolkit);
         }
     };
+
+    private catch(error, request: Hapi.Request,
+        toolkit: Hapi.ResponseToolkit) {
+        // se a sessão foi fechada tenta reiniciar o cliente whtas
+        if (error.message.indexOf('Session closed') > -1) {
+            let cliente = request.pre.client as WhatsCliente;
+            cliente.close();
+            cliente.model = request.pre.session as ClienteModel;
+            cliente.model.status = new ClienteStatus();
+            cliente.create();
+        }
+        return toolkit.response(
+            newResponse(request, {
+                boom: Boom.badImplementation(error),
+            })
+        );
+
+    }
 }

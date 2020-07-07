@@ -73,3 +73,6 @@ tokens/
 datafile
 *.pubxml
 *.user
+*.rar
+*.zip
+/.idea

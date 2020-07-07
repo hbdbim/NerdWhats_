@@ -13,11 +13,11 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>0b883b8c-3b19-45b9-b9e0-47c7eddcd8c0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>start.ts</StartupFile>
+    <StartupFile>public/start.ts</StartupFile>
     <StartWebBrowser>True</StartWebBrowser>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>public\</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
@@ -32,13 +32,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="server_old.ts" />
     <Content Include=".env" />
     <Content Include="auth.ts" />
-    <Content Include="data.json">
-      <SubType>Code</SubType>
-    </Content>
     <None Include="FolderProfile.pubxml" />
+    <Content Include="public\.env" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
@@ -51,6 +48,7 @@
     <Folder Include="model\" />
     <Folder Include="api\" />
     <Folder Include="helper\" />
+    <Folder Include="public\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="api\cliente\cliente-controller.ts" />
@@ -64,9 +62,6 @@
     <TypeScriptCompile Include="common\base-service.ts" />
     <TypeScriptCompile Include="common\crud-controller.ts" />
     <TypeScriptCompile Include="core\WhatsCliente.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="core\WhatsController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="helper\logger.ts" />
