@@ -30,13 +30,13 @@ export class WhatsCliente {
             {
                 headless: true, // Headless chrome
                 devtools: false, // Open devtools by default
-                useChrome: false, // If false will use Chromium instance
+                useChrome: true, // If false will use Chromium instance
                 debug: false, // Opens a debug session
-                logQR: true, // Logs QR automatically in terminal
+                logQR: false, // Logs QR automatically in terminal
                 browserArgs: [''], // Parameters to be added into the chrome browser instance
-                refreshQR: 15000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
+                refreshQR: 10000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
                 disableSpins: true,
-                autoClose: 600000
+                autoClose: Number.MAX_SAFE_INTEGER
             })
             .then((cli) => { this.start(cli); });
 
@@ -146,7 +146,7 @@ export class WhatsCliente {
     callHook(message: any) {
         let post = message.messages || [message];
 
-        this.httpcliente.post('/Mensagem/Hooks', { key: 'tagone', messages: post })
+        this.httpcliente.post('', { key: 'tagone', messages: post })
             .then(() => {
                 this.cliente.sendSeen(message.chatId || message.id.user + this.whatsPrefix);
             })

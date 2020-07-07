@@ -36,6 +36,7 @@
     <Content Include="auth.ts" />
     <None Include="FolderProfile.pubxml" />
     <Content Include="public\.env" />
+    <Content Include="public\datafile" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
