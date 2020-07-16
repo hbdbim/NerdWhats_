@@ -17,7 +17,7 @@ export default class Venom {
                         this._instance.push(service);
                         service.create();
                     } catch (e) {
-
+                        Logger.error(`Erro on register cliente ${cli._id}`, e);
                     }
             });
         });

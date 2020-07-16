@@ -52,9 +52,7 @@ export default class Auth {
 
                 server.auth.default('simple');
             } catch (error) {
-                Logger.info(
-                    `Plugins - Ups, something went wrong when registering swagger-ui plugin: ${error}`
-                );
+                Logger.error(`Plugins - Ups, something went wrong when registering swagger-ui plugin`, error);
             }
         });
 

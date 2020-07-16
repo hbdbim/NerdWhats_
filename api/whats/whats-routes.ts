@@ -7,7 +7,7 @@ import Joi = require('@hapi/joi');
 export default class WhatsRoutes implements IRoute {
     public async register(server: Hapi.Server): Promise<any> {
         return new Promise(resolve => {
-            Logger.info('UserRoutes - Start adding whtas routes');
+            Logger.info('WhatsRoutes - Start adding whtas routes');
 
             const controller = new WhatsController();
             const rootUrl = '/whats/';
@@ -124,84 +124,10 @@ export default class WhatsRoutes implements IRoute {
                         tags: ['api', 'whats']
                     }
                 }
-                //GRAVA UM NOVO CLIENTE
-                //{
-                //    payload: 
-                //}
-                //{
-                //    method: 'POST',
-                //    path: '/cliente',
-                //    handler: (request, reply) => {
-                //        let cliente: ClienteModel = new ClienteModel(request.payload.id, request.payload.domain, null);
-                //        globalThis.dataBase.addCliente(cliente);
-                //        return cliente;
-                //    }
-                //},
-                //{
-                //    method: 'GET',
-                //    path: '/status/{id}',
-                //    handler: (request, reply) => {
-                //        let controller = new WhatsController();
-                //        var cliente = controller.getCliente(request.params.id);
-                //        if (cliente != undefined)
-                //            return cliente.parse();
-                //        return reply.response('Cliente não cadastrado').code(404);
-                //    }
-                //},
-                //{
-                //    method: 'GET',
-                //    path: '/getAllNewMessages/{id}',
-                //    handler: (request, reply) => {
-                //        let controller = new WhatsController();
-                //        return controller.getAllNewMessages(request.params.id);
-                //    }
-                //},
-                //{
-                //    method: 'GET',
-                //    path: '/getAllUnreadMessages/{id}',
-                //    handler: (request, reply) => {
-                //        let controller = new WhatsController();
-                //        return controller.getAllUnreadMessages(request.params.id);
-                //    }
-                //},
-                //{
-                //    method: 'GET',
-                //    path: '/getAllChats/{id}',
-                //    handler: (request, reply) => {
-                //        let controller = new WhatsController();
-                //        return controller.getAllChats(request.params.id);
-                //    }
-                //},
-                //{
-                //    method: 'GET',
-                //    path: '/getNumberProfile/{id}',
-                //    handler: (request, reply) => {
-                //        let controller = new WhatsController();
-                //        return controller.getNumberProfile(request.params.id, request.query.contactId);
-                //    }
-                //},
-                //{
-                //    method: 'POST',
-                //    path: '/sendText/{id}',
-                //    handler: async (request, h) => {
-                //        let controller = new WhatsController();
-                //        const ret = await controller.sendText(request.params.id, request.payload.to, request.payload.content);
-                //        if (!ret)
-                //            return false
-                //        return ret;
-                //    }
-                //},
-                //{
-                //    method: 'POST',
-                //    path: '/sendAllUnreadMessages/{id}',
-                //    handler: (request, reply) => {
-                //        let controller = new WhatsController();
-                //        return controller.sendAllUnreadMessages(request.params.id);
-                //    }
-                //}
+               
             ]);
 
-            Logger.info('UserRoutes - Finish adding whtas routes');
+            Logger.info('WhatsRoutes - Finish adding whtas routes');
 
             resolve();
         });

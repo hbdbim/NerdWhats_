@@ -37,7 +37,7 @@ export default class Server {
 
             return Server._instance;
         } catch (error) {
-            Logger.info(`Server - There was something wrong: ${error}`);
+            Logger.error(`Server - There was something wrong: ${error}`);
 
             throw error;
         }

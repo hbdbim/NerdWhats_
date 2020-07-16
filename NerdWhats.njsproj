@@ -36,6 +36,7 @@
     <Content Include="auth.ts" />
     <None Include="FolderProfile.pubxml" />
     <Content Include="public\.env" />
+    <Content Include="public\config\log4js.json" />
     <Content Include="public\datafile" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
@@ -50,6 +51,7 @@
     <Folder Include="api\" />
     <Folder Include="helper\" />
     <Folder Include="public\" />
+    <Folder Include="public\config\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="api\cliente\cliente-controller.ts" />

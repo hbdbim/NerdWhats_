@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ClienteModel } from '../model/cliente-model';
 import { ClienteState } from '../model/enum-status';
 import { ClienteStatus } from '../model/cliente-status';
-import { send } from 'process';
+import Logger from '../helper/logger';
 
 
 export class WhatsCliente {
@@ -34,11 +34,11 @@ export class WhatsCliente {
                 debug: false, // Opens a debug session
                 logQR: false, // Logs QR automatically in terminal
                 browserArgs: [''], // Parameters to be added into the chrome browser instance
-                refreshQR: 10000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
+                refreshQR: 0, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
                 disableSpins: true,
-                autoClose: Number.MAX_SAFE_INTEGER
+                autoClose: 0
             })
-            .then((cli) => { this.start(cli); });
+            .then((cli) => { this.start(cli); }).catch((err) => { Logger.error(`Cliete [${this.model.domain}] erro on create`, err); });
 
     }
 
@@ -63,24 +63,26 @@ export class WhatsCliente {
 
         client.onMessage((message) => { this.onMessage(message) });
 
-        //client.onAck((ack) => { this.onAck(ack) });
-
         client.onStateChange((state) => {
-            console.log(state);
-            const conflits = [
-                SocketState.CONFLICT,
-                SocketState.UNLAUNCHED,
-            ];
-            if (conflits.includes(state)) {
-                this.cliente.useHere();
+            try {
+                const conflits = [
+                    SocketState.CONFLICT,
+                    SocketState.UNLAUNCHED,
+                ];
+                if (conflits.includes(state)) {
+                    this.cliente.useHere();
+                }
+                const closed = [
+                    SocketState.UNPAIRED
+                ];
+                if (closed.includes(state)) {
+                    this.close();
+                    this.create();
+                }
+            } catch (err) {
+                Logger.error(`Cliete [${this.model.domain}] state change ${state}`, err);
             }
-            const closed = [
-                SocketState.UNPAIRED
-            ];
-            if (closed.includes(state)) {
-                this.close();
-                this.create();
-            }
+
         });
     }
 
@@ -150,8 +152,8 @@ export class WhatsCliente {
             .then(() => {
                 this.cliente.sendSeen(message.chatId || message.id.user + this.whatsPrefix);
             })
-            .catch((e) => {
-                console.log(e);
+            .catch((err) => {
+                Logger.error(`Error calling web hook ${this.model.domain}`, err);
             });
     }
 }

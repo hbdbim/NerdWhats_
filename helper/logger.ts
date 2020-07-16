@@ -22,8 +22,27 @@ export class ApiLogger {
       level: process.env.LOG_LEVEL,
     });
 
-    return Winston.createLogger({
-      transports: [consoleTransport],
+      const fileTransport = new Winston.transports.File({
+          format: Winston.format.combine(              
+              Winston.format.timestamp(),
+              Winston.format.printf(info => {
+                  const { timestamp, level, message, ...args } = info;
+
+                  const ts = timestamp.slice(0, 19).replace('T', ' ');
+                  return `[${ts}] [${level}] - ${message} ${
+                      Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
+                      }`;
+              })
+          ),
+          filename: './log/app.log',
+          level: 'error',
+          maxsize: 10485760,
+          maxFiles:3
+      });
+
+
+      return Winston.createLogger({
+          transports: [consoleTransport, fileTransport],
     });
   }
 }
