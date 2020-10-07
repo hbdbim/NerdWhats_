@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./public",
+    "outDir": ".",
     "module": "commonjs",
     "target": "es6",
     "lib": [

@@ -33,8 +33,7 @@ export class WhatsCliente {
                 useChrome: true, // If false will use Chromium instance
                 debug: false, // Opens a debug session
                 logQR: false, // Logs QR automatically in terminal
-                browserArgs: [''], // Parameters to be added into the chrome browser instance
-                refreshQR: 0, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
+                browserArgs: [''], // Parameters to be added into the chrome browser instance                
                 disableSpins: true,
                 autoClose: 0
             })
@@ -112,7 +111,7 @@ export class WhatsCliente {
         for (var i = 0; i < _messages.length; i++) {
             var message = _messages[i];
             if (message.isMedia || message.isMMS) {
-                var buffer = await this.cliente.downloadFile(message);
+                var buffer = await this.cliente.decryptFile(message);
                 message.mediaData['mediaBlob'] = await buffer.toString('base64');
             }
         }
