@@ -290,8 +290,10 @@ export default class WhatsController {
 
     private catch(error, request: Hapi.Request,
         toolkit: Hapi.ResponseToolkit) {
+
+        Logger.error(`ERROR - ${request} - ${error}`);
         // se a sessão foi fechada tenta reiniciar o cliente whtas
-        if (error.message.indexOf('Session closed') > -1) {
+        if (error.message && error.message.indexOf('Session closed') > -1) {
             let cliente = request.pre.client as WhatsCliente;
             cliente.close();
             cliente.model = request.pre.session as ClienteModel;

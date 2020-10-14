@@ -15,7 +15,7 @@ export class WhatsCliente {
     private cliente: Whatsapp;
     constructor(_client: ClienteModel) {
         this.model = _client;
-        this.model.status = new ClienteStatus();
+        //this.model.status = new ClienteStatus();
     }
 
     create() {
@@ -23,21 +23,29 @@ export class WhatsCliente {
             return this;
         this.model.status.status = ClienteState.INICIANDO;
 
-        create(this.model._id, (base64Qr, asciiQR) => {
-            this.model.status.status = ClienteState.QRCODE;
-            this.model.status.qrCode = base64Qr;
-        }, null,
+        create(this.model._id,
+            (base64Qr, asciiQR) => {
+                this.model.status.status = ClienteState.QRCODE;
+                this.model.status.qrCode = base64Qr;
+            },
+            null,
             {
-                headless: true, // Headless chrome
+                folderNameToken: 'tokens', //folder name when saving tokens
+                mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
+                headless: false, // Headless chrome
                 devtools: false, // Open devtools by default
                 useChrome: true, // If false will use Chromium instance
                 debug: false, // Opens a debug session
-                logQR: false, // Logs QR automatically in terminal
-                browserArgs: [''], // Parameters to be added into the chrome browser instance                
-                disableSpins: true,
-                autoClose: 0
-            })
-            .then((cli) => { this.start(cli); }).catch((err) => { Logger.error(`Cliete [${this.model.domain}] erro on create`, err); });
+                browserWS: '', // If u want to use browserWSEndpoint
+                browserArgs: [''], // Parameters to be added into the chrome browser instance
+                logQR: true, // Logs QR automatically in terminal
+                disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
+                disableWelcome: true, // Will disable the welcoming message which appears in the beginning
+                updatesLog: true, // Logs info updates automatically in terminal
+                autoClose: 600000, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)                
+                createPathFileToken: false
+            }, null)
+            .then((cli) => { this.start(cli); }).catch((err) => { Logger.error(`Cliete [${this.model.domain}] erro on create`, err); this.close() });
 
     }
 
@@ -53,6 +61,27 @@ export class WhatsCliente {
         this.model.status.qrCode = null;
         this.cliente = client;
 
+        client.onStateChange((state) => {
+            try {
+                console.log('State changed: ', state);
+                const conflits = [
+                    SocketState.CONFLICT,
+                    SocketState.UNPAIRED,
+                    SocketState.UNLAUNCHED,
+                ];
+                if (conflits.includes(state)) {
+                    this.cliente.useHere();
+                    // Detect a logout
+                    if (state === 'UNPAIRED')
+                        this.close();
+
+                }
+            } catch (err) {
+                Logger.error(`Cliete [${this.model.domain}] state change ${state}`, err);
+            }
+
+        });
+
         this.httpcliente = axios.create({
             baseURL: this.model.webhook,
             headers: { 'tenant': this.model.domain }
@@ -62,27 +91,7 @@ export class WhatsCliente {
 
         client.onMessage((message) => { this.onMessage(message) });
 
-        client.onStateChange((state) => {
-            try {
-                const conflits = [
-                    SocketState.CONFLICT,
-                    SocketState.UNLAUNCHED,
-                ];
-                if (conflits.includes(state)) {
-                    this.cliente.useHere();
-                }
-                const closed = [
-                    SocketState.UNPAIRED
-                ];
-                if (closed.includes(state)) {
-                    this.close();
-                    this.create();
-                }
-            } catch (err) {
-                Logger.error(`Cliete [${this.model.domain}] state change ${state}`, err);
-            }
 
-        });
     }
 
     onAck(ack: Ack) {
@@ -110,7 +119,7 @@ export class WhatsCliente {
     downloadFiles = async (_messages: Message[]): Promise<any> => {
         for (var i = 0; i < _messages.length; i++) {
             var message = _messages[i];
-            if (message.isMedia || message.isMMS) {
+            if (message && (message.isMedia || message.isMMS)) {
                 var buffer = await this.cliente.decryptFile(message);
                 message.mediaData['mediaBlob'] = await buffer.toString('base64');
             }
