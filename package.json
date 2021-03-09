@@ -19,7 +19,7 @@
     "@hapi/joi": "17.1.1",
     "@hapi/vision": "^6.0.1",
     "@wppconnect-team/wppconnect": "^1.0.3",
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "dotenv": "^8.0.0",
     "file-type": "^14.7.1",
     "hapi-swagger": "13.0.2",
