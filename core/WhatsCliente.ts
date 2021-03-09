@@ -1,10 +1,14 @@
-import { create, Whatsapp, SocketState, Message, Ack, Chat, WhatsappProfile } from 'venom-bot';
+import { create, Whatsapp, SocketState, Message, Ack, Chat, WhatsappProfile } from '@wppconnect-team/wppconnect';
 
 import axios from 'axios';
 import { ClienteModel } from '../model/cliente-model';
 import { ClienteState } from '../model/enum-status';
 import { ClienteStatus } from '../model/cliente-status';
 import Logger from '../helper/logger';
+import ClienteResolver from '../api/cliente/cliente-resolver';
+import { resolve } from 'dns';
+
+//import { function } from '@hapi/joi';
 
 
 export class WhatsCliente {
@@ -13,6 +17,7 @@ export class WhatsCliente {
     whatsPrefix: string = '@c.us';
     private httpcliente: any;
     private cliente: Whatsapp;
+    resolver: ClienteResolver;
     constructor(_client: ClienteModel) {
         this.model = _client;
         //this.model.status = new ClienteStatus();
@@ -28,7 +33,7 @@ export class WhatsCliente {
                 this.model.status.status = ClienteState.QRCODE;
                 this.model.status.qrCode = base64Qr;
             },
-            null,
+            undefined,
             {
                 folderNameToken: 'tokens', //folder name when saving tokens
                 mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
@@ -38,15 +43,14 @@ export class WhatsCliente {
                 debug: false, // Opens a debug session
                 browserWS: '', // If u want to use browserWSEndpoint
                 browserArgs: [''], // Parameters to be added into the chrome browser instance
-                logQR: true, // Logs QR automatically in terminal
-                disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
+                logQR: true, // Logs QR automatically in terminal                
                 disableWelcome: true, // Will disable the welcoming message which appears in the beginning
                 updatesLog: true, // Logs info updates automatically in terminal
-                autoClose: 600000, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)                
-                createPathFileToken: false
+                autoClose: 0, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)                
+                createPathFileToken: true,
+                waitForLogin: true
             }, null)
-            .then((cli) => { this.start(cli); }).catch((err) => { Logger.error(`Cliete [${this.model.domain}] erro on create`, err); this.close() });
-
+            .then((cli) => { cli.waitForLogin().then(() => { this.start(cli); }) }).catch((err) => { Logger.error(`Cliete [${this.model.domain}] erro on create`, err); this.close() });
     }
 
     close() {
@@ -57,6 +61,7 @@ export class WhatsCliente {
     }
 
     start(client: Whatsapp) {
+
         this.model.status.status = ClienteState.CONECTADO;
         this.model.status.qrCode = null;
         this.cliente = client;
@@ -127,7 +132,7 @@ export class WhatsCliente {
     }
 
     getAllChats = async (_withNewMessageOnly?: boolean): Promise<Chat[]> => {
-        return await this.cliente.getAllChats(_withNewMessageOnly);
+        return await this.cliente.getAllChats();
     }
 
     getNumberProfile = async (contactId: string): Promise<WhatsappProfile> => {
@@ -155,6 +160,11 @@ export class WhatsCliente {
 
     callHook(message: any) {
         let post = message.messages || [message];
+        if (post)
+            for (var i = 0; i < post.length; i++) {
+                if (post[i])
+                    post[i].isMMS = false;
+            }
 
         this.httpcliente.post('', { key: 'tagone', messages: post })
             .then(() => {

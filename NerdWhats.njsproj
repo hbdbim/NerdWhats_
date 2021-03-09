@@ -36,6 +36,7 @@
     <Content Include=".env" />
     <Content Include="auth.ts" />
     <None Include="FolderProfile.pubxml" />
+    <Content Include="libman.json" />
     <Content Include="public\.env" />
     <Content Include="public\config\log4js.json" />
     <Content Include="public\datafile" />

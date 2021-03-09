@@ -10,11 +10,12 @@ export default class Venom {
         var resolver = new ClienteResolver();
         resolver.getAll().then((data: ClienteModel[]) => {
             data.forEach((c: ClienteModel) => {
-                var cli = new ClienteModel(c._id, c.domain, c.webhook);
+                var cli = new ClienteModel(c._id, c.domain, c.webhook);                
                 if (cli.autoload)
                     try {
                         Logger.info(`WhatsCLiente - Registering cliente ${cli._id}`);
                         var service = new WhatsCliente(cli);
+                        service.resolver = resolver;
                         this._instance.push(service);
                         service.create();
                     } catch (e) {

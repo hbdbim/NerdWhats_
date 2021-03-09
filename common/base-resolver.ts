@@ -15,6 +15,10 @@ export default class CrudResolver<T> {
         return await this.repository.updateById(id, update);
     }
 
+    public async updateSession(entity: any, update: any): Promise<T> {
+        return await this.repository.updateSession(entity, update);
+    }
+
     public async deleteOneById(id: string): Promise<any> {
         return await this.repository.deleteById(id);
     }

@@ -41,14 +41,26 @@ export default class Repository<T> {
         });
     }
 
-    public updateById(_id: string, data: T): Promise<T> {
+    public updateById(id: string, data: T): Promise<T> {
         return new Promise((resolve, reject) => {
-            this.dataSource.update({ _id }, data, {}, error => {
+            this.dataSource.update({ _id: id }, data, {}, error => {
                 if (error) {
                     reject(error);
                 }
 
-                this.getById(_id).then(value => resolve(value));
+                this.getById(id).then(value => resolve(value));
+            });
+        });
+    }
+
+    public updateSession(entity: any, data: T): Promise<T> {
+        return new Promise((resolve, reject) => {
+            this.dataSource.update({ _id: entity._id, domain: entity.domain }, data, {}, error => {
+                if (error) {
+                    reject(error);
+                }
+
+                this.getById(entity._id).then(value => resolve(value));
             });
         });
     }
