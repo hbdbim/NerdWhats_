@@ -21,7 +21,7 @@
     "@wppconnect-team/wppconnect": "^1.0.3",
     "axios": "0.19.2",
     "dotenv": "^8.0.0",
-    "file-type": "^14.7.1",
+    "file-type": "^16.5.4",
     "hapi-swagger": "13.0.2",
     "hapijs-status-monitor": "1.0.1",
     "inert": "^5.1.3",
