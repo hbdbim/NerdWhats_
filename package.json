@@ -26,7 +26,7 @@
     "hapijs-status-monitor": "1.0.1",
     "inert": "^5.1.3",
     "nedb": "^1.8.0",
-    "snyk": "^1.434.2",
+    "snyk": "^1.1024.0",
     "vision": "^5.4.4",
     "winston": "^3.3.3"
   },
